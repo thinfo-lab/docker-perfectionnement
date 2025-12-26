@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # docker-perfectionnement
 =======
 # Docker – Perfectionnement & usages avancés
