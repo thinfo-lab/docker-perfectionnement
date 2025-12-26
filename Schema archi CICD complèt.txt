@@ -1,0 +1,50 @@
+                 (DEV - PC local)
+      +----------------------------------+
+      |  docker-compose                  |
+      |  - build/test local              |
+      |  - docker compose up             |
+      +------------------+---------------+
+                         |
+                         | git push
+                         v
+               +---------------------+
+               | GitLab (repo)       |
+               | - code + Dockerfile |
+               | - CI variables      |
+               +----------+----------+
+                          |
+                          | webhook / pipeline
+                          v
+               +----------------------+
+               | Jenkins (CI/CD)      |
+               | - build image        |
+               | - tests              |
+               | - scan               |
+               | - push image         |
+               +----+-----------+-----+
+                    |           |
+      artifacts/jars|           | docker push
+                    v           v
+         +----------------+  +-----------------------+
+         | Nexus          |  | Harbor (Registry)     |
+         | (artefacts)    |  | - projets / RBAC      |
+         | jar/npm/etc    |  | - tags + digests      |
+         +----------------+  +----------+------------+
+                                         |
+                                         | Trivy scan (policy)
+                                         v
+                               +-------------------+
+                               | Trivy             |
+                               | - CVE scan image  |
+                               | - fail/publish    |
+                               +---------+---------+
+                                         |
+                                         | deploy (SSH/API)
+                                         v
+                 +--------------------------------------------+
+                 | Docker Swarm (PROD / PREPROD)              |
+                 |  Manager: stack deploy / services          |
+                 |  Workers: run tasks                        |
+                 |  - overlay network                         |
+                 |  - replicas / rolling update               |
+                 +--------------------------------------------+
